@@ -1,4 +1,4 @@
-# Letterbox Watchlist Random Movie Generator
+# Letterboxd Watchlist Random Movie Generator
 This project helps people who suffer from picking a movie out of their Letterboxd.com watchlist
 
 ## How to Build
