@@ -1,0 +1,18 @@
+{
+  "name": "letterbox-watchlist-random-movie-generator",
+  "version": "1.0.0",
+  "description": "This project helps people who suffer from picking a movie out of their Letterboxd.com watchlist",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "node": "^21.6.2",
+    "nodemon": "^3.0.3",
+    "puppeteer": "^22.1.0"
+  }
+}
