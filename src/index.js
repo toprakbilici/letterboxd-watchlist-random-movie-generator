@@ -1,26 +1,39 @@
 const puppeteer = require('puppeteer');
 const express = require('express');
 const app = express();
-const fs = require('fs')
+const cors = require('cors')
+const bodyparser = require('body-parser')
 
-app.listen(3001);
+app.listen(8383);
 
 
+app.use(cors({
+    origin: 'http://localhost:3000',
+}))
+app.use(bodyparser.json())
+
+
+
+let username;
+app.post(('/'), (req,res) => {
+    username = req.body.username;
+    console.log(username);
+})
 app.get('/', (req,res) => {
     let links = [];
-    const url = 'https://letterboxd.com/adambolt/watchlist/'
+    const url = `https://letterboxd.com/${username}/watchlist/`
+
     async function runFirst(){
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.goto(url, {waitUntil: 'domcontentloaded', timeout: 0});
+        await page.goto(url, {waitUntil: 'domcontentloaded'});
         await page.waitForSelector('#content', { timeout: 5_000 });
     
         //const text = await page.evaluate(() => document.body.innerText);
         //console.log(text);
     
         links = await page.evaluate(() => Array.from(document.querySelectorAll('a'), (e) => e.href));
-        console.log(links);
-        fs.writeFile('./test.txt', links.toString(), (e) => console.log('error',e));
+    
     
         await browser.close();
         
@@ -28,19 +41,15 @@ app.get('/', (req,res) => {
     async function randomFilmGetter(){
         await runFirst();
         const pageLinks = links.filter((string) => string.includes('page'))
-        console.log('pageLinks', pageLinks)
         const maxPageNumberString = await pageLinks[pageLinks.length - 1]
-        console.log(maxPageNumberString)
         const maxPageNumber = await maxPageNumberString.match(/\d+/)[0];
-        console.log(maxPageNumber)
         let filmUrls = [];
         let filmCount = 0;
         for(let i = 1; i <= maxPageNumber; i++){
-            console.log('i:', i);
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
             const watchlistPages = url + `page/${i}/`
-            await page.goto(watchlistPages, {waitUntil: 'domcontentloaded', timeout: 0});
+            await page.goto(watchlistPages, {waitUntil: 'domcontentloaded'});
             await page.waitForSelector('#content', { timeout: 5_000 });
     
             //await page.screenshot({path: `result${i}.png` })
@@ -64,6 +73,7 @@ app.get('/', (req,res) => {
         res.json(await randomFilmGetter());
       })()
 })
+
 
 /*let links = [];
 const url = 'https://letterboxd.com/safakkbilici/watchlist/'
