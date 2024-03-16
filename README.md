@@ -8,6 +8,8 @@ $ npm init
 $ npm install node
 $ npm install nodemon
 $ npm install express
+$ npm install cors
+$ npm install body-parser
 $ yarn add puppeteer
 ```
 ## How to Start the Project
